@@ -89,11 +89,11 @@ var cleanName = function(str){
 };
 
 var cleanPath = function(str){
-  return str.replace(/ /g, "\\ ").replace(/\]/g, "\\]").replace(/\[/g, "\\[");
+  return str.replace(/ /g, "\\ ").replace(/\]/g, "\\]").replace(/\[/g, "\\[").replace(/\(/g, "\\(").replace(/\)/g, "\\)").replace(/\'/g, "\\'");
 };
 
 var cleanerPath = function(str){
-  return str.replace(/ /g, "-").replace(/\]/g, "-").replace(/\[/g, "-");
+  return str.replace(/ /g, "-").replace(/\]/g, "-").replace(/\[/g, "-").replace(/\(/g, "-").replace(/\)/g, "-").replace(/\'/g, "");
 };
 
 var downloadFile = function(blob, name, encoding, callback){
@@ -103,10 +103,10 @@ var downloadFile = function(blob, name, encoding, callback){
   filepath = path + name;
 
   var future = new Future();
-  fs.writeFile(path + name, blob, encoding, function(err) {
-    if (err) {
-      console.log(err);
-      throw (new Meteor.Error(500, 'Failed to save file.', err));
+  fs.writeFile(path + name, blob, encoding, function(error) {
+    if (error) {
+      console.log(error);
+      throw (new Meteor.Error(500, 'Failed to save file.', error));
     } else {
       console.log('The file ' + name + ' (' + encoding + ') was saved to ' + path);
       future.return();
@@ -197,7 +197,7 @@ var moveToFtp = function(torrent){
       futureCopy.wait();
       tFiles = torrent.files;
       tFiles[tFiles.length] = {
-        name: missingDirs[missingDirs.length],
+        name: missingDirs[missingDirs.length - 1],
         path: "ftp://127.0.0.1/" + cleanerPath(file)
       };
       Torrents.update(torrent._id,
@@ -271,7 +271,7 @@ var moveToPublic = function(torrent){
       futureCopy.wait();
       tFiles = torrent.files;
       tFiles[tFiles.length] = {
-        name: missingDirs[missingDirs.length],
+        name: missingDirs[missingDirs.length - 1],
         path: file
       };
       Torrents.update(torrent._id,
