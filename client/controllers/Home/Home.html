@@ -55,7 +55,7 @@
 
 <template name="torrent">
   <tr>
-    <span hidden>
+    <span class="id" hidden>
       {{_id}}
     </span>
     <td>
@@ -68,6 +68,9 @@
       {{completion}}
     </td>
     <td>
+      <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Torrent' torrent_id=this._id}}">
+        <i class="fa fa-search"></i>
+      </a>
       <a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)">
         <i class="fa fa-remove"></i>
       </a>

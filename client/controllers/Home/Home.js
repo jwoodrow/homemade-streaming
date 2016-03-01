@@ -1,5 +1,5 @@
 Template.Home.onCreated(function() {
-  $.getScript("my_lovely_script.js",function(){});
+  Blaze._allowJavascriptUrls();
 });
 
 function operateFormatter(value, row, index) {
@@ -11,36 +11,7 @@ function operateFormatter(value, row, index) {
 }
 
 Template.Home.onRendered(function(){
-  Meteor.setTimeout(function(){
-    table = $('#torrent-table');
-    table.bootstrapTable({
-      toolbar: ".toolbar",
 
-      showRefresh: true,
-      search: false,
-      showToggle: false,
-      showColumns: true,
-      pagination: true,
-      striped: true,
-      sortable: true,
-      pageSize: 8,
-      pageList: [8,10,25,50,100],
-
-      formatShowingRows: function(pageFrom, pageTo, totalRows){
-          //do nothing here, we don't want to show the text "showing x of y from..."
-      },
-      formatRecordsPerPage: function(pageNumber){
-          return pageNumber + " rows visible";
-      },
-      icons: {
-          refresh: 'fa fa-refresh',
-          toggle: 'fa fa-th-list',
-          columns: 'fa fa-columns',
-          detailOpen: 'fa fa-plus-circle',
-          detailClose: 'fa fa-minus-circle'
-      }
-    });
-  }, 500);
 });
 
 Template.Home.helpers({
