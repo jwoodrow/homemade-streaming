@@ -1,0 +1,76 @@
+<template name="Home">
+  <script type="text/javascript" src="scripts/bootstrap-table.js"></script>
+  <div>
+    Test
+  </div>
+
+  <div>
+    <div>
+      Add Torrent
+    </div>
+    <div>
+      <form class="new_torrent">
+        <div>
+          <input type="text" placeholder="Torrent Magnet" name="magnet"/>
+        </div>
+        <div>
+          <input type="submit" value="Ajouter"/>
+        </div>
+      </form>
+      <div>
+        <input type="file" class="file"/>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div>
+      All Torrents
+    </div>
+    <div class="fresh-table full-color-azure">
+      <div class="toolbar">
+        <div class="columns columns-right pull-right">
+          <button class="btn btn-default refresh" type="button" name="refresh" title="Refresh">
+            <i class="glyphicon fa fa-refresh"></i>
+          </button>
+        </div>
+      </div>
+      <table id="fresh-table" class="table">
+        <thead>
+          <th data-field="name">Name</th>
+          <th data-field="hash">Hash</th>
+          <th data-field="completion">Completion</th>
+          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+        </thead>
+        <tbody>
+          {{#each torrents}}
+            {{>torrent}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+
+<template name="torrent">
+  <tr>
+    <span hidden>
+      {{_id}}
+    </span>
+    <td>
+      {{name}}
+    </td>
+    <td>
+      {{hash}}
+    </td>
+    <td>
+      {{completion}}
+    </td>
+    <td>
+      <a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)">
+        <i class="fa fa-remove"></i>
+      </a>
+    </td>
+  </tr>
+</template>
