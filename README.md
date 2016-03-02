@@ -6,8 +6,6 @@
 
 - Add and configure html5 player to handle video/audio/subtitles
 
-- Add possibility for audio and subtitles for each 'file'
-
 - Add users
 
 - Add a real landing page
