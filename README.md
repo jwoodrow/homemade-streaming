@@ -46,7 +46,7 @@ and your done
 
 ![alt text][woah]
 
-#### Please note that during the installation process it might ask for sudo privileges, this is not mandatory. It is simply to setup bash autocompletion for station !
+I will finish this !
 
 ![alt text][trustme]
 
