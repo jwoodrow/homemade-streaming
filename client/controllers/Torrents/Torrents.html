@@ -1,25 +1,16 @@
 <template name="Torrents">
-  <script type="text/javascript" src="scripts/bootstrap-table.js"></script>
+  {{> autoformModals}}
   <div>
     Test
   </div>
 
   <div>
-    <div>
-      Add Torrent
-    </div>
-    <div>
-      {{> quickForm collection="Torrents" id="InsertTorrentForm" type="insert" omitFields="createdAt,updatedAt,name,files,hash,completion,location" buttonContent="Add Torrent"}}
-    </div>
-  </div>
-
-  <div>
-    <div>
-      All Torrents
-    </div>
     <div class="fresh-table full-color-azure">
       <div class="toolbar">
         <div class="columns columns-right pull-right">
+          {{#afModal class="btn btn-default" collection="Torrents" operation="insert" omitFields="createdAt,updatedAt,name,files,hash,completion,location" title="New Torrent" formId="InsertTorrentForm"}}
+            <i class="glyphicon fa fa-plus"></i>
+          {{/afModal}}
           <button class="btn btn-default refresh" type="button" name="refresh" title="Refresh">
             <i class="glyphicon fa fa-refresh"></i>
           </button>
@@ -35,6 +26,56 @@
         <tbody>
           {{#each torrents}}
             {{>torrent}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="fresh-table full-color-orange">
+      <div class="toolbar">
+        <div class="columns columns-right pull-right">
+          {{#afModal class="btn btn-default" collection="Series" operation="insert" omitFields="createdAt,updatedAt" title="New Serie" formId="InsertSerieForm"}}
+            <i class="glyphicon fa fa-plus"></i>
+          {{/afModal}}
+          <button class="btn btn-default refresh" type="button" name="refresh" title="Refresh">
+            <i class="glyphicon fa fa-refresh"></i>
+          </button>
+        </div>
+      </div>
+      <table id="fresh-table" class="table">
+        <thead>
+          <th data-field="name">Name</th>
+          <th data-field="description">Description</th>
+          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+        </thead>
+        <tbody>
+          {{#each series}}
+            {{>serie}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="fresh-table full-color-green">
+      <div class="toolbar">
+        <div class="columns columns-right pull-right">
+          {{#afModal class="btn btn-default" collection="Videos" operation="insert" omitFields="info.createdAt,info.updatedAt,subtitles,audio" title="New Video" formId="InsertVideoForm"}}
+            <i class="glyphicon fa fa-plus"></i>
+          {{/afModal}}
+          <button class="btn btn-default refresh" type="button" name="refresh" title="Refresh">
+            <i class="glyphicon fa fa-refresh"></i>
+          </button>
+        </div>
+      </div>
+      <table id="fresh-table" class="table">
+        <thead>
+          <th data-field="name">Name</th>
+          <th data-field="hash">Description</th>
+          <th data-field="epNumber">Episode Number</th>
+          <th data-field="seasonNumber">Season Number</th>
+          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+        </thead>
+        <tbody>
+          {{#each videos}}
+            {{>video}}
           {{/each}}
         </tbody>
       </table>
@@ -61,7 +102,57 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Torrent' torrent_id=this._id}}">
         <i class="fa fa-search"></i>
       </a>
-      <a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)">
+      <a rel="tooltip" title="Remove" class="table-action remove-torrent" href="javascript:void(0)">
+        <i class="fa fa-remove"></i>
+      </a>
+    </td>
+  </tr>
+</template>
+
+<template name="serie">
+  <tr>
+    <span class="id" hidden>
+      {{_id}}
+    </span>
+    <td>
+      {{name}}
+    </td>
+    <td>
+      {{description}}
+    </td>
+    <td>
+      <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Serie' serie_id=this._id}}">
+        <i class="fa fa-search"></i>
+      </a>
+      <a rel="tooltip" title="Remove" class="table-action remove-serie" href="javascript:void(0)">
+        <i class="fa fa-remove"></i>
+      </a>
+    </td>
+  </tr>
+</template>
+
+<template name="video">
+  <tr>
+    <span class="id" hidden>
+      {{_id}}
+    </span>
+    <td>
+      {{info.name}}
+    </td>
+    <td>
+      {{info.description}}
+    </td>
+    <td>
+      {{info.epNumber}}
+    </td>
+    <td>
+      {{info.seasonNumber}}
+    </td>
+    <td>
+      <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Video' video_id=this._id}}">
+        <i class="fa fa-search"></i>
+      </a>
+      <a rel="tooltip" title="Remove" class="table-action remove-video" href="javascript:void(0)">
         <i class="fa fa-remove"></i>
       </a>
     </td>
