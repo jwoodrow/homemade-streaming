@@ -150,86 +150,61 @@ Meteor.methods({
         audio: audio
       }
     });
-  },
-  "createVideo": function(sourceTorrentId, videoId, quality, name, seriesId, episodeId){
-    var source = Torrents.findOne({_id: sourceTorrentId});
-    var videoFile = source.files[videoId];
-    if (seriesID){
-      var series = Series.findOne({_id: seriesId});
+  }
+});
 
-      var path = process.env.PWD + '/public/Series/' + series.name + "/" + name + "/";
-      var future = new Future();
-      cmd = "mkdir -p " + path + "{subtitles,audio}";
-      exec(cmd, function(error, stdout, stderr){
-        if (error){
-          console.log(error);
-          throw (new Meteor.Error(500, 'Failed to create directories.', error));
-        }
-        future.return();
-      });
-      future.wait();
+Videos.after.insert(function(userId, doc){
+  var source = Torrents.findOne({_id: doc.info.torrentId});
+  var videoFile = source.files[doc.info.fileId];
+  if (doc.info.seriesId){
+    var series = Series.findOne({_id: doc.info.seriesId});
 
-      var futureMove = new Future();
-      var extension = videoFile.name.split(".")[1];
-      cmd = "cp " + process.env.PWD + '/public/' + videoFile.path + " " + path + "quality." + extension;
-      exec(cmd, function(error, stdout, stderr){
-        if (error){
-          console.log(error);
-          throw (new Meteor.Error(500, "Failed to copy video", error));
-        }
-        futureMove.return();
-      });
-      futureMove.wait();
+    var path = process.env.PWD + '/public/Series/' + series.name + "/" + doc.info.seasonNumber + "/" + doc.info.epNumber + "/";
+    var future = new Future();
+    cmd = "mkdir -p " + path + "{subtitles,audio}";
+    exec(cmd, function(error, stdout, stderr){
+      if (error){
+        console.log(error);
+        throw (new Meteor.Error(500, 'Failed to create directories.', error));
+      }
+      future.return();
+    });
+    future.wait();
 
-      var video = {
-        info: {
-          name: name,
-          baseQuality: quality,
-          epNumber: episodeId,
-          seriesId: seriesId,
-          description: "Edit the video to enter a description"
-        },
-        subtitles: [],
-        audio: []
-      };
+    var futureMove = new Future();
+    var extension = videoFile.name.split(".")[1];
+    cmd = "cp " + process.env.PWD + '/public/' + videoFile.path + " " + path + "/" + doc.info.quality + "." + extension;
+    exec(cmd, function(error, stdout, stderr){
+      if (error){
+        console.log(error);
+        throw (new Meteor.Error(500, "Failed to copy video", error));
+      }
+      futureMove.return();
+    });
+    futureMove.wait();
+  } else {
+    var path = process.env.PWD + '/public/Movies/' + cleanName(doc.info.name) + "/";
+    var future = new Future();
+    cmd = "mkdir -p " + path + "{subtitles,audio}";
+    exec(cmd, function(error, stdout, stderr){
+      if (error){
+        console.log(error);
+        throw (new Meteor.Error(500, 'Failed to create directories.', error));
+      }
+      future.return();
+    });
+    future.wait();
 
-      Videos.insert(video);
-    } else {
-      var path = process.env.PWD + '/public/Movies/' + name + "/";
-      var future = new Future();
-      cmd = "mkdir -p " + path + "{subtitles,audio}";
-      exec(cmd, function(error, stdout, stderr){
-        if (error){
-          console.log(error);
-          throw (new Meteor.Error(500, 'Failed to create directories.', error));
-        }
-        future.return();
-      });
-      future.wait();
-
-      var futureMove = new Future();
-      var extension = videoFile.name.split(".")[1];
-      cmd = "cp " + process.env.PWD + '/public/' + videoFile.path + " " + path + "quality." + extension;
-      exec(cmd, function(error, stdout, stderr){
-        if (error){
-          console.log(error);
-          throw (new Meteor.Error(500, "Failed to copy video", error));
-        }
-        futureMove.return();
-      });
-      futureMove.wait();
-
-      var video = {
-        info: {
-          name: name,
-          baseQuality: quality,
-          description: "Edit the video to enter a description"
-        },
-        subtitles: [],
-        audio: []
-      };
-
-      Videos.insert(video);
-    }
+    var futureMove = new Future();
+    var extension = videoFile.name.split(".")[1];
+    cmd = "cp " + process.env.PWD + '/public/' + videoFile.path + " " + path + "/" + quality + "." + extension;
+    exec(cmd, function(error, stdout, stderr){
+      if (error){
+        console.log(error);
+        throw (new Meteor.Error(500, "Failed to copy video", error));
+      }
+      futureMove.return();
+    });
+    futureMove.wait();
   }
 });

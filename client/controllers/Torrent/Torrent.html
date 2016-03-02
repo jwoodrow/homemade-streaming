@@ -1,48 +1,5 @@
 <template name="Torrent">
   <div>
-    <div class="fresh-table full-color-azure">
-      <div class="toolbar">
-        <div class="columns columns-left pull-left">
-          <span>
-            {{name}}
-          </span>
-        </div>
-        <div class="columns columns-right pull-right">
-          <button class="btn btn-default removeTorrent" type="button" name="remove" title="Remove">
-            <i class="glyphicon fa fa-remove"></i>
-          </button>
-        </div>
-      </div>
-      <table id="fresh-table" class="table">
-        <thead>
-          <th data-field="name">Name</th>
-          <th data-field="hash">Path</th>
-          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-        </thead>
-        <tbody>
-          {{#each files}}
-            <tr>
-              <span class="index" hidden>
-                {{@index}}
-              </span>
-              <td>
-                {{name}}
-              </td>
-              <td>
-                {{path}}
-              </td>
-              <td>
-                <a rel="tooltip" title="Remove" class="table-action remove" href="javascript:void(0)">
-                  <i class="fa fa-remove"></i>
-                </a>
-                <a rel="tooltip" title="Play" class="table-action play" href="javascript:void(0)">
-                  <i class="fa fa-play"></i>
-                </a>
-              </td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
+    {{> quickForm collection="Torrents" id="ShowTorrentForm" type="readonly" doc=this}}
   </div>
 </template>

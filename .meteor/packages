@@ -24,3 +24,7 @@ manuelschoebel:ms-seo
 check
 twbs:bootstrap
 percolate:synced-cron
+aldeed:simple-schema
+aldeed:autoform
+aldeed:collection2
+matb33:collection-hooks

@@ -3,13 +3,6 @@ Template.Torrent.onCreated(function() {
 });
 
 Template.Torrent.onRendered(function(){
-  Meteor.setTimeout(function(){
-    var vid = document.getElementById('video');
-    var aud = document.getElementById('audio');
-
-    aud.currentTime = vid.currentTime;
-    aud.play();
-  }, 500);
 });
 
 Template.Torrent.helpers({

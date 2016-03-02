@@ -9,17 +9,7 @@
       Add Torrent
     </div>
     <div>
-      <form class="new_torrent">
-        <div>
-          <input type="text" placeholder="Torrent Magnet" name="magnet"/>
-        </div>
-        <div>
-          <input type="submit" value="Ajouter"/>
-        </div>
-      </form>
-      <div>
-        <input type="file" class="file"/>
-      </div>
+      {{> quickForm collection="Torrents" id="InsertTorrentForm" type="insert" omitFields="createdAt,updatedAt,name,files,hash,completion,location" buttonContent="Add Torrent"}}
     </div>
   </div>
 

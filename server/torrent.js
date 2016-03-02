@@ -15,12 +15,13 @@ var removeFile = function(filepath){
   future.wait();
 };
 
-var createTorrent = function(source, callback){
+var createTorrent = function(source, torrentId){
   cmd = "transmission-remote -n 'transmission:transmission' -a " + source;
   var futureAdd = new Future();
   exec(cmd, function(error, stdout, stderr){
     if (error){
       console.log(error);
+      throw (new Meteor.Error(500, 'Failed to add torrent.', error));
     }
     futureAdd.return();
   });
@@ -32,6 +33,7 @@ var createTorrent = function(source, callback){
   exec(cmd, function(error, stdout, stderr){
     if (error){
       console.log(error);
+      throw (new Meteor.Error(500, 'Failed to list torrents.', error));
       error = true;
     } else {
       output = stdout.toString();
@@ -39,49 +41,45 @@ var createTorrent = function(source, callback){
     futureList.return();
   });
   futureList.wait();
-  if (!error){
-    var hash;
-    var name;
-    output = output.split("\n");
-    _.every(output, function(line){
-      if (line !== "ID" && line !== "Sum:" && line != ""){
-        var futureInfo = new Future();
-        var res;
-        cmd = "transmission-remote -n 'transmission:transmission' -t" + parseInt(line) + " -i | awk -F':' '{print $2}'";
-        exec(cmd, function(error, stdout, stderr){
-          if (error){
-            console.log(error);
-          } else {
-            res = stdout.toString().split("\n");
-          }
-          futureInfo.return();
-        });
-        futureInfo.wait();
-        tres = Torrents.find({hash: res[3]});
-        if (tres.count() == 0){
-          hash = res[3];
-          name = res[2];
-          return false;
+  var hash;
+  var name;
+  var res;
+  output = output.split("\n");
+  _.every(output, function(line){
+    if (line !== "ID" && line !== "Sum:" && line != ""){
+      var futureInfo = new Future();
+      cmd = "transmission-remote -n 'transmission:transmission' -t" + parseInt(line) + " -i | awk -F':' '{print $2}'";
+      exec(cmd, function(error, stdout, stderr){
+        if (error){
+          console.log(error);
+    throw (new Meteor.Error(500, 'Failed to get torrent info.', error));
+        } else {
+          res = stdout.toString().split("\n");
         }
-        else{
-          return true;
-        }
+        futureInfo.return();
+      });
+      futureInfo.wait();
+      tres = Torrents.find({hash: res[3]});
+      if (tres.count() == 0){
+        hash = res[3];
+        name = res[2];
+        return false;
       }
       else{
         return true;
       }
-    });
-    Torrents.insert({
-      name: name,
-      hash: hash,
-      completion: "0%",
-      files: [],
-      createdAt: new Date()
-    });
-    callback(source);
-  } else {
-    console.log("Torrent was not added");
-  }
+    }
+    else{
+      return true;
+    }
+  });
+  id = Torrents.update({_id: torrentId}, {
+    $set: {
+    name: name,
+    hash: hash,
+    location: res[8].trim()
+    }
+  });
 };
 
 var cleanName = function(str){
@@ -96,36 +94,13 @@ var cleanerPath = function(str){
   return str.replace(/ /g, "-").replace(/\]/g, "-").replace(/\[/g, "-").replace(/\(/g, "-").replace(/\)/g, "-").replace(/\'/g, "");
 };
 
-var downloadFile = function(blob, name, encoding, callback){
-  var name = cleanName(name || 'file');
-  var encoding = encoding || 'binary';
-  var path = process.env.PWD + '/public/';
-  filepath = path + name;
-
-  var future = new Future();
-  fs.writeFile(path + name, blob, encoding, function(error) {
-    if (error) {
-      console.log(error);
-      throw (new Meteor.Error(500, 'Failed to save file.', error));
-    } else {
-      console.log('The file ' + name + ' (' + encoding + ') was saved to ' + path);
-      future.return();
-    }
-  });
-
-  future.wait();
-
-  filepath = cleanPath(filepath);
-
-  callback(filepath, removeFile);
-};
-
 var removeTorrent = function(torrent){
   var future = new Future();
   cmd = "transmission-remote -n 'transmission:transmission' -t" + torrent.hash + " --remove-and-delete";
   exec(cmd, function(error, stdout, stderr){
     if (error){
       console.log(error);
+      throw (new Meteor.Error(500, 'Failed to save file.', error));
     }
     future.return();
   });
@@ -146,6 +121,7 @@ var moveToPublic = function(torrent){
   exec(cmd, function(error, stdout, stderr){
     if (error){
       console.log(error);
+      throw (new Meteor.Error(500, 'Failed to save file.', error));
     }
     files = stdout.toString().split("\n");
     futureFiles.return();
@@ -158,6 +134,7 @@ var moveToPublic = function(torrent){
   exec(cmd, function(error, stdout, stderr){
     if (error){
       console.log(error);
+      throw (new Meteor.Error(500, 'Failed to save file.', error));
     }
     futureRemoveTorrent.return();
   });
@@ -179,6 +156,7 @@ var moveToPublic = function(torrent){
             exec(cmd, function(error, stdout, stderr){
               if (error){
                 console.log(error);
+      throw (new Meteor.Error(500, 'Failed to save file.', error));
               }
               futureDir.return();
             });
@@ -191,6 +169,7 @@ var moveToPublic = function(torrent){
       exec(cmd, function(error, stdout, stderr){
         if (error){
           console.log(error);
+      throw (new Meteor.Error(500, 'Failed to save file.', error));
         }
         futureCopy.return();
       });
@@ -212,12 +191,6 @@ var moveToPublic = function(torrent){
 }
 
 Meteor.methods({
-  addTorrent: function(magnet){
-    createTorrent(magnet, doNothing);
-  },
-  addTorrentFromFile: function(blob, name, encoding){
-    downloadFile(blob, name, encoding, createTorrent);
-  },
   deleteTorrent: function(torrentId){
     torrent = Torrents.findOne(torrentId);
     var future = new Future();
@@ -225,6 +198,7 @@ Meteor.methods({
     exec(cmd, function(error, stdout, stderr){
       if (error){
         console.log(error);
+      throw (new Meteor.Error(500, 'Failed to save file.', error));
       }
       future.return();
     });
@@ -281,6 +255,10 @@ Meteor.methods({
       }
     });
   }
+});
+
+Torrents.after.insert(function(userId, doc){
+  createTorrent(doc.magnet, doc._id);
 });
 
 SyncedCron.add({

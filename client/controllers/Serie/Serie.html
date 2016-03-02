@@ -1,3 +1,16 @@
 <template name="Serie">
-
+  {{> quickForm collection="Series" id="ShowSerieForm" type="readonly" doc=serie}}
+  {{#each videos}}
+    <div>
+      <span>
+        {{info.name}}
+      </span>
+      <span>
+        {{info.description}}
+      </span>
+      <span>
+        {{info.epNumber}}
+      </span>
+    </div>
+  {{/each}}
 </template>
