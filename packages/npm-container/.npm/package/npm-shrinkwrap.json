@@ -1,0 +1,206 @@
+{
+  "dependencies": {
+    "ass-to-vtt": {
+      "version": "1.0.0",
+      "dependencies": {
+        "duplexify": {
+          "version": "3.4.3",
+          "dependencies": {
+            "end-of-stream": {
+              "version": "1.0.0",
+              "dependencies": {
+                "once": {
+                  "version": "1.3.3",
+                  "dependencies": {
+                    "wrappy": {
+                      "version": "1.0.1"
+                    }
+                  }
+                }
+              }
+            },
+            "inherits": {
+              "version": "2.0.1"
+            },
+            "readable-stream": {
+              "version": "2.0.5",
+              "dependencies": {
+                "core-util-is": {
+                  "version": "1.0.2"
+                },
+                "isarray": {
+                  "version": "0.0.1"
+                },
+                "process-nextick-args": {
+                  "version": "1.0.6"
+                },
+                "string_decoder": {
+                  "version": "0.10.31"
+                },
+                "util-deprecate": {
+                  "version": "1.0.2"
+                }
+              }
+            }
+          }
+        },
+        "minimist": {
+          "version": "1.2.0"
+        },
+        "pumpify": {
+          "version": "1.3.4",
+          "dependencies": {
+            "inherits": {
+              "version": "2.0.1"
+            },
+            "pump": {
+              "version": "1.0.1",
+              "dependencies": {
+                "end-of-stream": {
+                  "version": "1.1.0"
+                },
+                "once": {
+                  "version": "1.3.3",
+                  "dependencies": {
+                    "wrappy": {
+                      "version": "1.0.1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "split2": {
+          "version": "0.2.1"
+        },
+        "through2": {
+          "version": "0.6.5",
+          "dependencies": {
+            "readable-stream": {
+              "version": "1.0.33",
+              "dependencies": {
+                "core-util-is": {
+                  "version": "1.0.2"
+                },
+                "isarray": {
+                  "version": "0.0.1"
+                },
+                "string_decoder": {
+                  "version": "0.10.31"
+                },
+                "inherits": {
+                  "version": "2.0.1"
+                }
+              }
+            },
+            "xtend": {
+              "version": "4.0.1"
+            }
+          }
+        }
+      }
+    },
+    "srt-to-vtt": {
+      "version": "1.0.3",
+      "dependencies": {
+        "duplexify": {
+          "version": "3.4.3",
+          "dependencies": {
+            "end-of-stream": {
+              "version": "1.0.0",
+              "dependencies": {
+                "once": {
+                  "version": "1.3.3",
+                  "dependencies": {
+                    "wrappy": {
+                      "version": "1.0.1"
+                    }
+                  }
+                }
+              }
+            },
+            "inherits": {
+              "version": "2.0.1"
+            },
+            "readable-stream": {
+              "version": "2.0.5",
+              "dependencies": {
+                "core-util-is": {
+                  "version": "1.0.2"
+                },
+                "isarray": {
+                  "version": "0.0.1"
+                },
+                "process-nextick-args": {
+                  "version": "1.0.6"
+                },
+                "string_decoder": {
+                  "version": "0.10.31"
+                },
+                "util-deprecate": {
+                  "version": "1.0.2"
+                }
+              }
+            }
+          }
+        },
+        "minimist": {
+          "version": "1.2.0"
+        },
+        "pumpify": {
+          "version": "1.3.4",
+          "dependencies": {
+            "inherits": {
+              "version": "2.0.1"
+            },
+            "pump": {
+              "version": "1.0.1",
+              "dependencies": {
+                "end-of-stream": {
+                  "version": "1.1.0"
+                },
+                "once": {
+                  "version": "1.3.3",
+                  "dependencies": {
+                    "wrappy": {
+                      "version": "1.0.1"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "split2": {
+          "version": "0.2.1"
+        },
+        "through2": {
+          "version": "0.6.5",
+          "dependencies": {
+            "readable-stream": {
+              "version": "1.0.33",
+              "dependencies": {
+                "core-util-is": {
+                  "version": "1.0.2"
+                },
+                "isarray": {
+                  "version": "0.0.1"
+                },
+                "string_decoder": {
+                  "version": "0.10.31"
+                },
+                "inherits": {
+                  "version": "2.0.1"
+                }
+              }
+            },
+            "xtend": {
+              "version": "4.0.1"
+            }
+          }
+        }
+      }
+    }
+  }
+}

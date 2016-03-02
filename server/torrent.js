@@ -137,80 +137,6 @@ var removeTorrent = function(torrent){
   });
 }
 
-var moveToFtp = function(torrent){
-  var hash = torrent.hash;
-  var basepath = torrent.location;
-  var files;
-  var cmd = "transmission-remote -n 'transmission:transmission' -t " + hash + " -f | awk 'NR > 2 {print substr($0,index($0,$7))}'";
-  var futureFiles = new Future();
-  exec(cmd, function(error, stdout, stderr){
-    if (error){
-      console.log(error);
-    }
-    files = stdout.toString().split("\n");
-    futureFiles.return();
-  });
-
-  futureFiles.wait();
-
-  futureRemoveTorrent = new Future();
-  var cmd = "transmission-remote -n 'transmission:transmission' -t " + hash + " -S";
-  exec(cmd, function(error, stdout, stderr){
-    if (error){
-      console.log(error);
-    }
-    futureRemoveTorrent.return();
-  });
-  futureRemoveTorrent.wait();
-
-  _.forEach(files, function(file, index){
-    if(file != ""){
-      originalpath = cleanPath(basepath + "/" + file);
-      missingDirs = file.split('/');
-      path = process.env.FTPDIR;
-      destpath = cleanerPath(path + "/" + file);
-      tmpPath = path;
-      if (missingDirs.length > 1){
-        _.forEach(missingDirs, function(dir, index){
-          if (index < missingDirs.length - 1){
-            tmpPath = cleanerPath(tmpPath + "/" + dir);
-            cmd = "mkdir -p " + tmpPath;
-            var futureDir = new Future();
-            exec(cmd, function(error, stdout, stderr){
-              if (error){
-                console.log(error);
-              }
-              futureDir.return();
-            });
-            futureDir.wait();
-          }
-        });
-      }
-      cmd = "mv " + originalpath + " " + destpath;
-      var futureCopy = new Future();
-      exec(cmd, function(error, stdout, stderr){
-        if (error){
-          console.log(error);
-        }
-        futureCopy.return();
-      });
-      futureCopy.wait();
-      tFiles = torrent.files;
-      tFiles[tFiles.length] = {
-        name: missingDirs[missingDirs.length - 1],
-        path: "ftp://127.0.0.1/" + cleanerPath(file)
-      };
-      Torrents.update(torrent._id,
-      {
-        $set: {
-          files: tFiles,
-        }
-      });
-    }
-  });
-  removeTorrent(torrent);
-};
-
 var moveToPublic = function(torrent){
   var hash = torrent.hash;
   var basepath = torrent.location;
@@ -241,7 +167,7 @@ var moveToPublic = function(torrent){
     if(file != ""){
       originalpath = cleanPath(basepath + "/" + file);
       missingDirs = file.split('/');
-      path = process.env.PWD + '/public';
+      path = process.env.PWD + '/public/Torrents';
       destpath = cleanPath(path + "/" + file);
       tmpPath = path;
       if (missingDirs.length > 1){
@@ -333,7 +259,6 @@ Meteor.methods({
         });
       }
       if (percentage == "100%"){
-        console.log("move files to ftp");
         moveToPublic(torrent);
       }
     }
@@ -344,23 +269,9 @@ Meteor.methods({
     var file = files[fileIndex];
     var path = file.path;
 
-    if (path.indexOf("ftp://127.0.0.1/") > -1){
-      var realPath = process.env.FTPDIR + "/";
-      path = path.replace("ftp://127.0.0.1/", "");
-      path = realPath + path;
-    } else {
-      path = process.env.PWD + '/public/' + path;
-    }
+    path = process.env.PWD + '/public/Torrents/' + path;
 
-    var future = new Future();
-    cmd = "rm " + cleanPath(path);
-    exec(cmd, function(error, stdout, stderr){
-      if (error){
-        console.log(error);
-      }
-      future.return();
-    });
-    future.wait();
+    removeFile(cleanPath(path));
 
     files.splice(fileIndex, 1);
 
