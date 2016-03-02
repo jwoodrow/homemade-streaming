@@ -11,9 +11,6 @@
           {{#afModal class="btn btn-default" collection="Torrents" operation="insert" omitFields="createdAt,updatedAt,name,files,hash,completion,location" title="New Torrent" formId="InsertTorrentForm"}}
             <i class="glyphicon fa fa-plus"></i>
           {{/afModal}}
-          <button class="btn btn-default refresh" type="button" name="refresh" title="Refresh">
-            <i class="glyphicon fa fa-refresh"></i>
-          </button>
         </div>
       </div>
       <table id="fresh-table" class="table">
@@ -36,9 +33,6 @@
           {{#afModal class="btn btn-default" collection="Series" operation="insert" omitFields="createdAt,updatedAt" title="New Serie" formId="InsertSerieForm"}}
             <i class="glyphicon fa fa-plus"></i>
           {{/afModal}}
-          <button class="btn btn-default refresh" type="button" name="refresh" title="Refresh">
-            <i class="glyphicon fa fa-refresh"></i>
-          </button>
         </div>
       </div>
       <table id="fresh-table" class="table">
@@ -57,12 +51,9 @@
     <div class="fresh-table full-color-green">
       <div class="toolbar">
         <div class="columns columns-right pull-right">
-          {{#afModal class="btn btn-default" collection="Videos" operation="insert" omitFields="info.createdAt,info.updatedAt,subtitles,audio" title="New Video" formId="InsertVideoForm"}}
+          {{#afModal class="btn btn-default" collection="Videos" operation="insert" omitFields="info.createdAt,info.updatedAt" title="New Video" formId="InsertVideoForm"}}
             <i class="glyphicon fa fa-plus"></i>
           {{/afModal}}
-          <button class="btn btn-default refresh" type="button" name="refresh" title="Refresh">
-            <i class="glyphicon fa fa-refresh"></i>
-          </button>
         </div>
       </div>
       <table id="fresh-table" class="table">
@@ -76,6 +67,46 @@
         <tbody>
           {{#each videos}}
             {{>video}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="fresh-table full-color-red">
+      <div class="toolbar">
+        <div class="columns columns-right pull-right">
+          {{#afModal class="btn btn-default" collection="Audios" operation="insert" omitFields="createdAt,updatedAt" title="New Audio Track" formId="InsertAudioForm"}}
+            <i class="glyphicon fa fa-plus"></i>
+          {{/afModal}}
+        </div>
+      </div>
+      <table id="fresh-table" class="table">
+        <thead>
+          <th data-field="name">Language</th>
+          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+        </thead>
+        <tbody>
+          {{#each audios}}
+            {{>audio}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="fresh-table full-color-blue">
+      <div class="toolbar">
+        <div class="columns columns-right pull-right">
+          {{#afModal class="btn btn-default" collection="Subtitles" operation="insert" omitFields="createdAt,updatedAt" title="New Subtitle Track" formId="InsertSubtitleForm"}}
+            <i class="glyphicon fa fa-plus"></i>
+          {{/afModal}}
+        </div>
+      </div>
+      <table id="fresh-table" class="table">
+        <thead>
+          <th data-field="name">Language</th>
+          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+        </thead>
+        <tbody>
+          {{#each subtitles}}
+            {{>subtitle}}
           {{/each}}
         </tbody>
       </table>
@@ -149,10 +180,51 @@
       {{info.seasonNumber}}
     </td>
     <td>
+      <a rel="tooltip" title="Watch" class="table-action watch" href="{{pathFor 'Player' video_id=this._id}}">
+        <i class="fa fa-play"></i>
+      </a>
       <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Video' video_id=this._id}}">
         <i class="fa fa-search"></i>
       </a>
       <a rel="tooltip" title="Remove" class="table-action remove-video" href="javascript:void(0)">
+        <i class="fa fa-remove"></i>
+      </a>
+    </td>
+  </tr>
+</template>
+
+<template name="audio">
+  <tr>
+    <span class="id" hidden>
+      {{_id}}
+    </span>
+    <td>
+      {{language}}
+    </td>
+    <td>
+      <a rel="tooltip" title="Details" class="table-action detail" href="javascript:void(0)">
+        <i class="fa fa-search"></i>
+      </a>
+      <a rel="tooltip" title="Remove" class="table-action remove-audio" href="javascript:void(0)">
+        <i class="fa fa-remove"></i>
+      </a>
+    </td>
+  </tr>
+</template>
+
+<template name="subtitle">
+  <tr>
+    <span class="id" hidden>
+      {{_id}}
+    </span>
+    <td>
+      {{language}}
+    </td>
+    <td>
+      <a rel="tooltip" title="Details" class="table-action detail" href="javascript:void(0)">
+        <i class="fa fa-search"></i>
+      </a>
+      <a rel="tooltip" title="Remove" class="table-action remove-subtitle" href="javascript:void(0)">
         <i class="fa fa-remove"></i>
       </a>
     </td>

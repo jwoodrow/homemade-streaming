@@ -1,0 +1,8 @@
+<template name="Player">
+  <video width="1280" height="720" controls>
+    <source src="{{videoSource video}}" type="video/mp4">
+    {{#each subtitles}}
+      <track label="{{language}}" kind="subtitles" srclang="en" src="{{subtitleSource this}}" default>
+    {{/each}}
+  </video>
+</template>
