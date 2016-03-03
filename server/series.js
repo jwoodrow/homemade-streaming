@@ -7,15 +7,6 @@ var cleanPath = function(str){
 };
 
 Meteor.methods({
-  CreateSerie: function(name, description){
-    serie = {
-      name: name,
-      description: description
-    };
-
-    check(serie, Series.simpleSchema());
-    return Series.insert(serie);
-  }
 });
 
 Series.before.remove(function(userId, doc){

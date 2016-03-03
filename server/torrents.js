@@ -2,19 +2,6 @@ var Future = Npm.require("fibers/future");
 var exec = Npm.require("child_process").exec;
 var fs = Npm.require('fs');
 
-var doNothing = function(){
-
-};
-
-var removeFile = function(filepath){
-  var cmd = "rm " + filepath;
-  var future = new Future();
-  exec(cmd, function(error, stdout, stderr){
-    future.return();
-  });
-  future.wait();
-};
-
 var createTorrent = function(source, torrentId){
   cmd = "transmission-remote -n 'transmission:transmission' -a " + source;
   var futureAdd = new Future();
@@ -82,16 +69,8 @@ var createTorrent = function(source, torrentId){
   });
 };
 
-var cleanName = function(str){
-  return str.replace(/\.\./g,'').replace(/\//g,'');
-};
-
 var cleanPath = function(str){
   return str.replace(/ /g, "\\ ").replace(/\]/g, "\\]").replace(/\[/g, "\\[").replace(/\(/g, "\\(").replace(/\)/g, "\\)").replace(/\'/g, "\\'");
-};
-
-var cleanerPath = function(str){
-  return str.replace(/ /g, "-").replace(/\]/g, "-").replace(/\[/g, "-").replace(/\(/g, "-").replace(/\)/g, "-").replace(/\'/g, "");
 };
 
 var removeTorrent = function(torrent){
@@ -191,20 +170,6 @@ var moveToPublic = function(torrent){
 }
 
 Meteor.methods({
-  deleteTorrent: function(torrentId){
-    torrent = Torrents.findOne(torrentId);
-    var future = new Future();
-    cmd = "transmission-remote -n 'transmission:transmission' -t" + torrent.hash + " --remove-and-delete";
-    exec(cmd, function(error, stdout, stderr){
-      if (error){
-        console.log(error);
-      throw (new Meteor.Error(500, 'Failed to save file.', error));
-      }
-      future.return();
-    });
-    future.wait();
-    Torrents.remove(torrentId);
-  },
   updateTorrent: function(torrentId){
     torrent = Torrents.findOne(torrentId);
     if (torrent.completion != "100%"){
@@ -236,24 +201,6 @@ Meteor.methods({
         moveToPublic(torrent);
       }
     }
-  },
-  removeFile: function(torrentId, fileIndex){
-    var torrent = Torrents.findOne(torrentId);
-    var files = torrent.files;
-    var file = files[fileIndex];
-    var path = file.path;
-
-    path = process.env.PWD + '/public/Torrents/' + path;
-
-    removeFile(cleanPath(path));
-
-    files.splice(fileIndex, 1);
-
-    Torrents.update({_id: torrentId}, {
-      $set: {
-        files: files
-      }
-    });
   }
 });
 
