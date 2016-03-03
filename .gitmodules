@@ -1,0 +1,3 @@
+[submodule "packages/meteor-autoform-modals"]
+	path = packages/meteor-autoform-modals
+	url = git@github.com:jwoodrow/meteor-autoform-modals.git
