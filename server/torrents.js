@@ -261,6 +261,27 @@ Torrents.after.insert(function(userId, doc){
   createTorrent(doc.magnet, doc._id);
 });
 
+Torrents.after.remove(function(userId, doc){
+  var cmd;
+  if (doc.completion != "100%"){
+    cmd = "transmission-remote -n 'transmission:transmission' -t" + torrent.hash + " --remove-and-delete";
+  } else {
+    var paths = "";
+    _.forEach(doc.files, function(file){
+      paths += " " + process.env.PWD + '/public/Torrents/' + cleanPath(file.path.split('/')[0]);
+    });
+    cmd = "rm -rf" + paths;
+  }
+  var future = new Future();
+  exec(cmd, function(error, stdout, stderr){
+    if (error){
+      console.log(error);
+    }
+    future.return();
+  });
+  future.wait();
+});
+
 SyncedCron.add({
   name: 'update Torrents',
   schedule: function(parser) {

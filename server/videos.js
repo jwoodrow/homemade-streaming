@@ -11,7 +11,7 @@ Videos.after.insert(function(userId, doc){
   if (doc.info.seriesId){
     var series = Series.findOne({_id: doc.info.seriesId});
 
-    var path = process.env.PWD + '/public/Series/' + series.name + "/" + doc.info.seasonNumber + "/" + doc.info.epNumber + "/";
+    var path = process.env.PWD + '/public/Series/' + cleanPath(series.name) + "/" + doc.info.seasonNumber + "/" + doc.info.epNumber + "/";
     var future = new Future();
     cmd = "mkdir -p " + path + "{subtitles,audio}";
     exec(cmd, function(error, stdout, stderr){
@@ -25,7 +25,7 @@ Videos.after.insert(function(userId, doc){
 
     var futureMove = new Future();
     var extension = videoFile.name.split(".")[1];
-    cmd = "cp " + process.env.PWD + '/public/' + cleanPath(videoFile.path) + " " + path + "/" + doc.info.quality + "." + extension;
+    cmd = "cp " + process.env.PWD + '/public/Torrents/' + cleanPath(videoFile.path) + " " + path + "/" + doc.info.quality + "." + extension;
     exec(cmd, function(error, stdout, stderr){
       if (error){
         console.log(error);
@@ -49,7 +49,7 @@ Videos.after.insert(function(userId, doc){
 
     var futureMove = new Future();
     var extension = videoFile.name.split(".")[1];
-    cmd = "cp " + process.env.PWD + '/public/' + cleanPath(videoFile.path) + " " + path + "/" + quality + "." + extension;
+    cmd = "cp " + process.env.PWD + '/public/Torrents/' + cleanPath(videoFile.path) + " " + path + "/" + quality + "." + extension;
     exec(cmd, function(error, stdout, stderr){
       if (error){
         console.log(error);
@@ -59,4 +59,30 @@ Videos.after.insert(function(userId, doc){
     });
     futureMove.wait();
   }
+});
+
+Videos.before.remove(function(userId, doc){
+  audios = Audios.find({videoId: doc._id}).fetch();
+  subtitles = Subtitles.find({videoId: doc._id}).fetch();
+  _.forEach(audios, function(audio, index){
+    Audios.remove({_id: audio._id});
+  });
+  _.forEach(subtitles, function(subtitle, index){
+    Subtitles.remove({_id: subtitle._id});
+  });
+  if (doc.info.seriesId){
+    serie = Series.findOne({_id: doc.info.seriesId});
+    path = process.env.PWD + '/public/Series/' + cleanPath(serie.name) + "/" + doc.info.seasonNumber + "/" + doc.info.epNumber;
+  } else {
+    path = process.env.PWD + '/public/Movies/' + cleanName(doc.info.name);
+  }
+  cmd = "rm -rf " + path;
+  var future = new Future();
+  exec(cmd, function(error, result){
+    if (error){
+      console.log(error);
+    }
+    future.return();
+  });
+  future.wait();
 });

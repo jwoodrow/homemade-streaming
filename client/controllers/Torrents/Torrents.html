@@ -133,9 +133,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Torrent' torrent_id=this._id}}">
         <i class="fa fa-search"></i>
       </a>
-      <a rel="tooltip" title="Remove" class="table-action remove-torrent" href="javascript:void(0)">
+      {{#afModal class="btn btn-danger" collection="Torrents" operation="remove" doc=_id}}
         <i class="fa fa-remove"></i>
-      </a>
+      {{/afModal}}
     </td>
   </tr>
 </template>
@@ -155,9 +155,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Serie' serie_id=this._id}}">
         <i class="fa fa-search"></i>
       </a>
-      <a rel="tooltip" title="Remove" class="table-action remove-serie" href="javascript:void(0)">
+      {{#afModal class="btn btn-danger" collection="Series" operation="remove" doc=_id}}
         <i class="fa fa-remove"></i>
-      </a>
+      {{/afModal}}
     </td>
   </tr>
 </template>
@@ -186,9 +186,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Video' video_id=this._id}}">
         <i class="fa fa-search"></i>
       </a>
-      <a rel="tooltip" title="Remove" class="table-action remove-video" href="javascript:void(0)">
+      {{#afModal class="btn btn-danger" collection="Videos" operation="remove" doc=_id}}
         <i class="fa fa-remove"></i>
-      </a>
+      {{/afModal}}
     </td>
   </tr>
 </template>
@@ -205,9 +205,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="javascript:void(0)">
         <i class="fa fa-search"></i>
       </a>
-      <a rel="tooltip" title="Remove" class="table-action remove-audio" href="javascript:void(0)">
+      {{#afModal class="btn btn-danger" collection="Audios" operation="remove" doc=_id}}
         <i class="fa fa-remove"></i>
-      </a>
+      {{/afModal}}
     </td>
   </tr>
 </template>
@@ -224,9 +224,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="javascript:void(0)">
         <i class="fa fa-search"></i>
       </a>
-      <a rel="tooltip" title="Remove" class="table-action remove-subtitle" href="javascript:void(0)">
+      {{#afModal class="btn btn-danger" collection="Subtitles" operation="remove" doc=_id}}
         <i class="fa fa-remove"></i>
-      </a>
+      {{/afModal}}
     </td>
   </tr>
 </template>
