@@ -205,7 +205,9 @@ Meteor.methods({
 });
 
 Torrents.after.insert(function(userId, doc){
-  createTorrent(doc.magnet, doc._id);
+  if (doc.magnet != "upload") {
+    createTorrent(doc.magnet, doc._id);
+  }
 });
 
 Torrents.after.remove(function(userId, doc){
