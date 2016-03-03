@@ -32,8 +32,8 @@ var createTorrent = function(source, torrentId){
   var name;
   var res;
   output = output.split("\n");
-  _.every(output, function(line){
-    if (line !== "ID" && line !== "Sum:" && line != ""){
+  _.every(output, function(line, index){
+    if (index > 0 && index < output.length -1 && line != ""){
       var futureInfo = new Future();
       cmd = "transmission-remote -n 'transmission:transmission' -t" + parseInt(line) + " -i | awk -F':' '{print $2}'";
       exec(cmd, function(error, stdout, stderr){
@@ -46,10 +46,10 @@ var createTorrent = function(source, torrentId){
         futureInfo.return();
       });
       futureInfo.wait();
-      tres = Torrents.find({hash: res[3]});
+      tres = Torrents.find({hash: res[3].trim()});
       if (tres.count() == 0){
-        hash = res[3];
-        name = res[2];
+        hash = res[3].trim();
+        name = res[2].trim();
         return false;
       }
       else{

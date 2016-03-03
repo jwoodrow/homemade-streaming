@@ -22,12 +22,15 @@ meteorhacks:npm
 npm-container
 manuelschoebel:ms-seo
 check
-twbs:bootstrap
 percolate:synced-cron
 aldeed:simple-schema
 aldeed:autoform
 aldeed:collection2
 matb33:collection-hooks
-yogiben:autoform-modals
 tomi:upload-server
 tomi:upload-jquery
+fabienb4:autoform-semantic-ui
+semantic:ui
+flemay:less-autoprefixer
+richsilv:semantic-ui-modal
+yogiben:autoform-modals
