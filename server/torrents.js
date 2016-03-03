@@ -143,7 +143,7 @@ var moveToPublic = function(torrent){
           }
         });
       }
-      cmd = "mv " + originalpath + " " + destpath;
+      cmd = "cp -R " + originalpath + " " + destpath;
       var futureCopy = new Future();
       exec(cmd, function(error, stdout, stderr){
         if (error){
