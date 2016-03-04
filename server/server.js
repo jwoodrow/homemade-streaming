@@ -18,12 +18,15 @@ Meteor.startup(function () {
       path = process.env.PWD + '/.uploads' + cleanPath(fileInfo.path);
       dest = process.env.PWD + "/.storage/Torrents/Uploads/" + cleanPath(fileInfo.name);
       var torrent;
-      if (torrent = Torrents.findOne({name: "Uploads"})){
+      torrent = Torrents.findOne({name: "Uploads"});
+      if (torrent){
         files = torrent.files;
+        console.log(torrent,files);
         files[files.length] = {
           name: fileInfo.name,
-          dest: dest
+          path: "Uploads/" + cleanPath(fileInfo.name)
         };
+        console.log(torrent,files);
         Torrents.update({_id: torrent._id}, {
           $set: {
             files: files

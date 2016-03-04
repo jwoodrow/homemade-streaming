@@ -96,11 +96,11 @@ Subtitles.after.insert(function(userId, doc){
   var subtitleFile = source.files[doc.fileId];
   var copy = false;
 
-  if (subtitleFile.name.split('.')[1] == "srt"){
+  if (subtitleFile.name.split('.')[subtitleFile.name.split('.').length - 1] == "srt"){
     subtitleFile = convertSrtToVtt(subtitleFile);
-  } else if (subtitleFile.name.split('.')[1] == "ass"){
+  } else if (subtitleFile.name.split('.')[subtitleFile.name.split('.').length - 1] == "ass"){
     subtitleFile = convertAssToVtt(subtitleFile);
-  } else if (subtitleFile.name.split('.')[1] == "vtt"){
+  } else if (subtitleFile.name.split('.')[subtitleFile.name.split('.').length - 1] == "vtt"){
     console.log("No conversion necessary");
     copy = true;
   } else {
@@ -138,7 +138,7 @@ Subtitles.after.remove(function(userId, doc){
     serie = Series.findOne({_id: video.info.Series});
     path = process.env.PWD + '/.storage/Series/' + cleanPath(serie.info.name) + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/subtitles/" + doc.language + ".vtt";
   } else {
-    path = process.env.PWD + '/.storage/Movies/' + cleanName(video.info.name) + "/subtitles/" + doc.language + ".vtt";
+    path = process.env.PWD + '/.storage/Movies/' + cleanPath(video.info.name) + "/subtitles/" + doc.language + ".vtt";
   }
   cmd = "rm -rf " + path;
   var future = new Future();

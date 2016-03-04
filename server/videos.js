@@ -49,7 +49,8 @@ Videos.after.insert(function(userId, doc){
 
     var futureMove = new Future();
     var extension = videoFile.name.split(".")[videoFile.name.split(".").length - 1];
-    cmd = "cp " + process.env.PWD + '/.storage/Torrents/' + cleanPath(videoFile.path) + " " + path + "/" + quality + "." + extension;
+    cmd = "cp " + process.env.PWD + '/.storage/Torrents/' + cleanPath(videoFile.path) + " " + path + doc.info.quality + "." + extension;
+    console.log(cmd);
     exec(cmd, function(error, stdout, stderr){
       if (error){
         console.log(error);
@@ -74,7 +75,7 @@ Videos.before.remove(function(userId, doc){
     serie = Series.findOne({_id: doc.info.Series});
     path = process.env.PWD + '/.storage/Series/' + cleanPath(serie.info.name) + "/" + doc.info.seasonNumber + "/" + doc.info.epNumber;
   } else {
-    path = process.env.PWD + '/.storage/Movies/' + cleanName(doc.info.name);
+    path = process.env.PWD + '/.storage/Movies/' + cleanPath(doc.info.name);
   }
   cmd = "rm -rf " + path;
   var future = new Future();

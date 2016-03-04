@@ -100,12 +100,18 @@ Template.rows.helpers({
         _.each(keys, function(key, i){
           tmp = tmp[key];
         });
-        collectionName = element.key.split('.')[element.key.split('.').length - 1];
-        collection2 = collectionObj(collectionName);
-        nameSource = collection2.findOne({_id: tmp});
-        ret.push({
-          val: nameSource.info.name
-        });
+        if (tmp){
+          collectionName = element.key.split('.')[element.key.split('.').length - 1];
+          collection2 = collectionObj(collectionName);
+          nameSource = collection2.findOne({_id: tmp});
+          ret.push({
+            val: nameSource.info.name
+          });
+        } else {
+          ret.push({
+            val: "Movie"
+          });
+        }
       } else if (element.value[0] != '#') {
         var tmp = value;
         var keys = element.key.split('.');
