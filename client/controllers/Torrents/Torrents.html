@@ -1,5 +1,5 @@
 <template name="Torrents">
-  {{> autoformModals}}
+  {{> AutoFormModal}}
   <div>
     Test
   </div>
@@ -8,9 +8,9 @@
     <div class="fresh-table full-color-azure">
       <div class="toolbar">
         <div class="columns columns-right pull-right">
-          {{#afModal class="btn btn-default" collection="Torrents" operation="insert" omitFields="createdAt,updatedAt,name,files,hash,completion,location" title="New Torrent" formId="InsertTorrentForm"}}
+          {{#AutoFormButton class="btn btn-default" collection="Torrents" operation="insert" omitFields="createdAt,updatedAt,name,files,hash,completion,location" title="New Torrent" formId="InsertTorrentForm"}}
             <i class="glyphicon fa fa-plus"></i>
-          {{/afModal}}
+          {{/AutoFormButton}}
         </div>
       </div>
       <table id="fresh-table" class="table">
@@ -30,9 +30,9 @@
     <div class="fresh-table full-color-orange">
       <div class="toolbar">
         <div class="columns columns-right pull-right">
-          {{#afModal class="btn btn-default" collection="Series" operation="insert" omitFields="createdAt,updatedAt" title="New Serie" formId="InsertSerieForm"}}
+          {{#AutoFormButton class="btn btn-default" collection="Series" operation="insert" omitFields="createdAt,updatedAt" title="New Serie" formId="InsertSerieForm"}}
             <i class="glyphicon fa fa-plus"></i>
-          {{/afModal}}
+          {{/AutoFormButton}}
         </div>
       </div>
       <table id="fresh-table" class="table">
@@ -51,9 +51,9 @@
     <div class="fresh-table full-color-green">
       <div class="toolbar">
         <div class="columns columns-right pull-right">
-          {{#afModal class="btn btn-default" collection="Videos" operation="insert" omitFields="info.createdAt,info.updatedAt" title="New Video" formId="InsertVideoForm"}}
+          {{#AutoFormButton class="btn btn-default" collection="Videos" operation="insert" omitFields="info.createdAt,info.updatedAt" title="New Video" formId="InsertVideoForm"}}
             <i class="glyphicon fa fa-plus"></i>
-          {{/afModal}}
+          {{/AutoFormButton}}
         </div>
       </div>
       <table id="fresh-table" class="table">
@@ -74,9 +74,9 @@
     <div class="fresh-table full-color-red">
       <div class="toolbar">
         <div class="columns columns-right pull-right">
-          {{#afModal class="btn btn-default" collection="Audios" operation="insert" omitFields="createdAt,updatedAt" title="New Audio Track" formId="InsertAudioForm"}}
+          {{#AutoFormButton class="btn btn-default" collection="Audios" operation="insert" omitFields="createdAt,updatedAt" title="New Audio Track" formId="InsertAudioForm"}}
             <i class="glyphicon fa fa-plus"></i>
-          {{/afModal}}
+          {{/AutoFormButton}}
         </div>
       </div>
       <table id="fresh-table" class="table">
@@ -94,9 +94,9 @@
     <div class="fresh-table full-color-blue">
       <div class="toolbar">
         <div class="columns columns-right pull-right">
-          {{#afModal class="btn btn-default" collection="Subtitles" operation="insert" omitFields="createdAt,updatedAt" title="New Subtitle Track" formId="InsertSubtitleForm"}}
+          {{#AutoFormButton class="btn btn-default" collection="Subtitles" operation="insert" omitFields="createdAt,updatedAt" title="New Subtitle Track" formId="InsertSubtitleForm"}}
             <i class="glyphicon fa fa-plus"></i>
-          {{/afModal}}
+          {{/AutoFormButton}}
         </div>
       </div>
       <table id="fresh-table" class="table">
@@ -133,9 +133,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Torrent' torrent_id=this._id}}">
         <i class="fa fa-search"></i>
       </a>
-      {{#afModal class="btn btn-danger" collection="Torrents" operation="remove" doc=_id}}
+      {{#quickRemoveButton collection="Torrents" _id=this._id beforeRemove=beforeDelete}}
         <i class="fa fa-remove"></i>
-      {{/afModal}}
+      {{/quickRemoveButton}}
     </td>
   </tr>
 </template>
@@ -155,9 +155,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Serie' serie_id=this._id}}">
         <i class="fa fa-search"></i>
       </a>
-      {{#afModal class="btn btn-danger" collection="Series" operation="remove" doc=_id}}
+      {{#quickRemoveButton collection="Series" _id=this._id beforeRemove=beforeDelete}}
         <i class="fa fa-remove"></i>
-      {{/afModal}}
+      {{/quickRemoveButton}}
     </td>
   </tr>
 </template>
@@ -186,9 +186,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Video' video_id=this._id}}">
         <i class="fa fa-search"></i>
       </a>
-      {{#afModal class="btn btn-danger" collection="Videos" operation="remove" doc=_id}}
+      {{#quickRemoveButton collection="Videos" _id=this._id beforeRemove=beforeDelete}}
         <i class="fa fa-remove"></i>
-      {{/afModal}}
+      {{/quickRemoveButton}}
     </td>
   </tr>
 </template>
@@ -205,9 +205,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="javascript:void(0)">
         <i class="fa fa-search"></i>
       </a>
-      {{#afModal class="btn btn-danger" collection="Audios" operation="remove" doc=_id}}
+      {{#quickRemoveButton collection="Audios" _id=this._id beforeRemove=beforeDelete}}
         <i class="fa fa-remove"></i>
-      {{/afModal}}
+      {{/quickRemoveButton}}
     </td>
   </tr>
 </template>
@@ -224,9 +224,9 @@
       <a rel="tooltip" title="Details" class="table-action detail" href="javascript:void(0)">
         <i class="fa fa-search"></i>
       </a>
-      {{#afModal class="btn btn-danger" collection="Subtitles" operation="remove" doc=_id}}
+      {{#quickRemoveButton collection="Subtitles" _id=this._id beforeRemove=beforeDelete}}
         <i class="fa fa-remove"></i>
-      {{/afModal}}
+      {{/quickRemoveButton}}
     </td>
   </tr>
 </template>

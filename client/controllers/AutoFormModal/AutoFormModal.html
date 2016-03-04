@@ -1,0 +1,22 @@
+<template name="AutoFormModal">
+  <div class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+      {{get "afTitle"}}
+    </div>
+    <div class="content">
+      {{#if collectionAndOperation}}
+        <p>{{{prompt}}}</p>
+        {{#if notRemove}}
+          {{> quickForm title=(get "afTitle") id=(get "afFormId") collection=(get "afCollection") type=(get "afOperation") doc=(get "afDoc") fields=(get "afFields") omitFields=(get "afOmitFields") buttonClasses=(get "afButtonClasses") buttonContent=(get "afButtonContent")}}
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+</template>
+
+<template name="AutoFormButton">
+  <a class="{{class}} launch-modal" collection="{{collection}}" operation="{{operation}}">
+    {{> UI.contentBlock}}
+  </a>
+</template>

@@ -1,36 +1,69 @@
-Template.Home.onCreated(function() {
+Template.Torrents.onCreated(function() {
   Blaze._allowJavascriptUrls();
 });
 
-Template.Home.onRendered(function(){
+Template.Torrents.onRendered(function(){
 
 });
 
-Template.Home.helpers({
+Template.Torrents.helpers({
   torrents: function(){
     return Torrents.find({});
   }
 });
 
-Template.Home.events({
-  'click .refresh': function(){
-    torrents = Torrents.find().fetch();
-    _.each(torrents, function(torrent, index){
-      Meteor.call("updateTorrent", torrent._id, function(){
+Template.Torrents.events({
+});
 
-      });
-    });
-  },
-  'change .file': function(ev){
-    Meteor.saveFile(ev.target.files[0], ev.target.files[0].name);
+Template.Torrents.events({
+});
+
+Template.torrent.helpers({
+  beforeDelete: function(){
+    return function(collection, id) {
+      if (confirm('Do you really want to remove this ?')) {
+        this.remove();
+      }
+    }
   }
 });
 
-Template.torrent.events({
-  'click .remove': function(event){
-    id = $(event.target).parent().parent().prev().prev().prev().prev().html().trim();
-    Meteor.call("deleteTorrent", id, function(){
+Template.serie.helpers({
+  beforeDelete: function(){
+    return function(collection, id) {
+      if (confirm('Do you really want to remove this ?')) {
+        this.remove();
+      }
+    }
+  }
+});
 
-    });
+Template.video.helpers({
+  beforeDelete: function(){
+    return function(collection, id) {
+      if (confirm('Do you really want to remove this ?')) {
+        this.remove();
+      }
+    }
+  }
+});
+
+Template.audio.helpers({
+  beforeDelete: function(){
+    return function(collection, id) {
+      if (confirm('Do you really want to remove this ?')) {
+        this.remove();
+      }
+    }
+  }
+});
+
+Template.subtitle.helpers({
+  beforeDelete: function(){
+    return function(collection, id) {
+      if (confirm('Do you really want to remove this ?')) {
+        this.remove();
+      }
+    }
   }
 });
