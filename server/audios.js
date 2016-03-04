@@ -6,17 +6,17 @@ var cleanPath = function(str){
 };
 
 Audios.after.insert(function(UserId, doc){
-  var source = Torrents.findOne({_id: doc.torrentId});
+  var source = Torrents.findOne({_id: doc.Torrents});
   var audioFile = source.files[doc.fileId];
-  var video = Videos.findOne({_id: doc.videoId});
+  var video = Videos.findOne({_id: doc.Videos});
 
-  var srcPath = process.env.PWD + '/public/Torrents/' + cleanPath(audioFile.path);
+  var srcPath = process.env.PWD + '/.storage/Torrents/' + cleanPath(audioFile.path);
   var extension = audioFile.name.split(".")[1];
-  if (video.info.seriesId){
-    var serie = Series.findOne({_id: video.info.seriesId})
-    var dstPath = process.env.PWD + '/public/Series/' + cleanPath(serie.name) + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/audio/" + doc.language + "." + extension;
+  if (video.info.Series){
+    var serie = Series.findOne({_id: video.info.Series})
+    var dstPath = process.env.PWD + '/.storage/Series/' + cleanPath(serie.info.name) + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/audio/" + doc.language + "." + extension;
   } else {
-    var dstPath = process.env.PWD + '/public/Movies/' + cleanPath(video.info.name) + "/audio/" + doc.language + "." + extension;
+    var dstPath = process.env.PWD + '/.storage/Movies/' + cleanPath(video.info.name) + "/audio/" + doc.language + "." + extension;
   }
   var future = new Future();
   var cmd;
@@ -32,12 +32,12 @@ Audios.after.insert(function(UserId, doc){
 });
 
 Audios.after.remove(function(userId, doc){
-  video = Videos.findOne({_id: doc.videoId});
-  if (video.info.seriesId){
-    serie = Series.findOne({_id: video.info.seriesId});
-    path = process.env.PWD + '/public/Series/' + cleanPath(serie.name) + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/audio/" + doc.language + "*";
+  video = Videos.findOne({_id: doc.Videos});
+  if (video.info.Series){
+    serie = Series.findOne({_id: video.info.Series});
+    path = process.env.PWD + '/.storage/Series/' + cleanPath(serie.info.name) + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/audio/" + doc.language + "*";
   } else {
-    path = process.env.PWD + '/public/Movies/' + cleanName(video.info.name) + "/audio/" + doc.language + "*";
+    path = process.env.PWD + '/.storage/Movies/' + cleanName(video.info.name) + "/audio/" + doc.language + "*";
   }
   cmd = "rm -rf " + path;
   var future = new Future();

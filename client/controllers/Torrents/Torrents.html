@@ -1,230 +1,52 @@
 <template name="Torrents">
-  {{> AutoFormModal}}
-  <div>
-    Test
-  </div>
+  <section>
+    {{> AutoFormModal}}
+  </section>
 
-  <div>
-    <div class="fresh-table full-color-azure">
-      <div class="toolbar">
-        <div class="columns columns-right pull-right">
-          {{#AutoFormButton class="btn btn-default" collection="Torrents" operation="insert" omitFields="createdAt,updatedAt,name,files,hash,completion,location" title="New Torrent" formId="InsertTorrentForm"}}
-            <i class="glyphicon fa fa-plus"></i>
-          {{/AutoFormButton}}
-        </div>
-      </div>
-      <table id="fresh-table" class="table">
+  {{#each toArray this}}
+    <section>
+      <table class="ui celled table">
         <thead>
-          <th data-field="name">Name</th>
-          <th data-field="hash">Hash</th>
-          <th data-field="completion">Completion</th>
-          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
+          {{#each (getSchema key)}}
+          <th>
+            {{value}}
+          </th>
+          {{/each}}
+          <th>
+            Actions
+          </th>
         </thead>
         <tbody>
-          {{#each torrents}}
-            {{>torrent}}
+          {{#each value}}
+            {{> rows value=this}}
           {{/each}}
         </tbody>
+        <tfoot class="full-width">
+            <th>
+            </th>
+          <th>
+            {{#AutoFormButton class="ui right floated small primary button" collection=(collection key) operation="insert" omitFields=(getOmits key) title=(title key) formId=(formId key)}}
+              <i class="glyphicon fa fa-plus"></i>
+            {{/AutoFormButton}}
+          </th>
+        </tfoot>
       </table>
-    </div>
-    <div class="fresh-table full-color-orange">
-      <div class="toolbar">
-        <div class="columns columns-right pull-right">
-          {{#AutoFormButton class="btn btn-default" collection="Series" operation="insert" omitFields="createdAt,updatedAt" title="New Serie" formId="InsertSerieForm"}}
-            <i class="glyphicon fa fa-plus"></i>
-          {{/AutoFormButton}}
-        </div>
-      </div>
-      <table id="fresh-table" class="table">
-        <thead>
-          <th data-field="name">Name</th>
-          <th data-field="description">Description</th>
-          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-        </thead>
-        <tbody>
-          {{#each series}}
-            {{>serie}}
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-    <div class="fresh-table full-color-green">
-      <div class="toolbar">
-        <div class="columns columns-right pull-right">
-          {{#AutoFormButton class="btn btn-default" collection="Videos" operation="insert" omitFields="info.createdAt,info.updatedAt" title="New Video" formId="InsertVideoForm"}}
-            <i class="glyphicon fa fa-plus"></i>
-          {{/AutoFormButton}}
-        </div>
-      </div>
-      <table id="fresh-table" class="table">
-        <thead>
-          <th data-field="name">Name</th>
-          <th data-field="hash">Description</th>
-          <th data-field="epNumber">Episode Number</th>
-          <th data-field="seasonNumber">Season Number</th>
-          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-        </thead>
-        <tbody>
-          {{#each videos}}
-            {{>video}}
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-    <div class="fresh-table full-color-red">
-      <div class="toolbar">
-        <div class="columns columns-right pull-right">
-          {{#AutoFormButton class="btn btn-default" collection="Audios" operation="insert" omitFields="createdAt,updatedAt" title="New Audio Track" formId="InsertAudioForm"}}
-            <i class="glyphicon fa fa-plus"></i>
-          {{/AutoFormButton}}
-        </div>
-      </div>
-      <table id="fresh-table" class="table">
-        <thead>
-          <th data-field="name">Language</th>
-          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-        </thead>
-        <tbody>
-          {{#each audios}}
-            {{>audio}}
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-    <div class="fresh-table full-color-blue">
-      <div class="toolbar">
-        <div class="columns columns-right pull-right">
-          {{#AutoFormButton class="btn btn-default" collection="Subtitles" operation="insert" omitFields="createdAt,updatedAt" title="New Subtitle Track" formId="InsertSubtitleForm"}}
-            <i class="glyphicon fa fa-plus"></i>
-          {{/AutoFormButton}}
-        </div>
-      </div>
-      <table id="fresh-table" class="table">
-        <thead>
-          <th data-field="name">Language</th>
-          <th data-field="actions" data-formatter="operateFormatter" data-events="operateEvents">Actions</th>
-        </thead>
-        <tbody>
-          {{#each subtitles}}
-            {{>subtitle}}
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-  </div>
+    </section>
+  {{/each}}
 </template>
 
-
-<template name="torrent">
+<template name="rows">
   <tr>
-    <span class="id" hidden>
-      {{_id}}
-    </span>
-    <td>
-      {{name}}
-    </td>
-    <td>
-      {{hash}}
-    </td>
-    <td>
-      {{completion}}
-    </td>
+    {{#each (toArray value ../..)}}
+      <td>
+        {{val}}
+      </td>
+    {{/each}}
     <td>
       <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Torrent' torrent_id=this._id}}">
         <i class="fa fa-search"></i>
       </a>
-      {{#quickRemoveButton collection="Torrents" _id=this._id beforeRemove=beforeDelete}}
-        <i class="fa fa-remove"></i>
-      {{/quickRemoveButton}}
-    </td>
-  </tr>
-</template>
-
-<template name="serie">
-  <tr>
-    <span class="id" hidden>
-      {{_id}}
-    </span>
-    <td>
-      {{name}}
-    </td>
-    <td>
-      {{description}}
-    </td>
-    <td>
-      <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Serie' serie_id=this._id}}">
-        <i class="fa fa-search"></i>
-      </a>
-      {{#quickRemoveButton collection="Series" _id=this._id beforeRemove=beforeDelete}}
-        <i class="fa fa-remove"></i>
-      {{/quickRemoveButton}}
-    </td>
-  </tr>
-</template>
-
-<template name="video">
-  <tr>
-    <span class="id" hidden>
-      {{_id}}
-    </span>
-    <td>
-      {{info.name}}
-    </td>
-    <td>
-      {{info.description}}
-    </td>
-    <td>
-      {{info.epNumber}}
-    </td>
-    <td>
-      {{info.seasonNumber}}
-    </td>
-    <td>
-      <a rel="tooltip" title="Watch" class="table-action watch" href="{{pathFor 'Player' video_id=this._id}}">
-        <i class="fa fa-play"></i>
-      </a>
-      <a rel="tooltip" title="Details" class="table-action detail" href="{{pathFor 'Video' video_id=this._id}}">
-        <i class="fa fa-search"></i>
-      </a>
-      {{#quickRemoveButton collection="Videos" _id=this._id beforeRemove=beforeDelete}}
-        <i class="fa fa-remove"></i>
-      {{/quickRemoveButton}}
-    </td>
-  </tr>
-</template>
-
-<template name="audio">
-  <tr>
-    <span class="id" hidden>
-      {{_id}}
-    </span>
-    <td>
-      {{language}}
-    </td>
-    <td>
-      <a rel="tooltip" title="Details" class="table-action detail" href="javascript:void(0)">
-        <i class="fa fa-search"></i>
-      </a>
-      {{#quickRemoveButton collection="Audios" _id=this._id beforeRemove=beforeDelete}}
-        <i class="fa fa-remove"></i>
-      {{/quickRemoveButton}}
-    </td>
-  </tr>
-</template>
-
-<template name="subtitle">
-  <tr>
-    <span class="id" hidden>
-      {{_id}}
-    </span>
-    <td>
-      {{language}}
-    </td>
-    <td>
-      <a rel="tooltip" title="Details" class="table-action detail" href="javascript:void(0)">
-        <i class="fa fa-search"></i>
-      </a>
-      {{#quickRemoveButton collection="Subtitles" _id=this._id beforeRemove=beforeDelete}}
+      {{#quickRemoveButton collection=(getKey ../..) _id=value._id beforeRemove=beforeDelete}}
         <i class="fa fa-remove"></i>
       {{/quickRemoveButton}}
     </td>

@@ -39,7 +39,7 @@ var ass_to_vtt = function(file_in, file_out, cb) {
 };
 
 var convertSrtToVtt = function(subtitle){
-  path = process.env.PWD + '/public/Torrents/';
+  path = process.env.PWD + '/.storage/Torrents/';
   path = path + subtitle.path;
   dest = subtitle.path.split('/');
   dest2 = dest[dest.length - 1];
@@ -48,7 +48,7 @@ var convertSrtToVtt = function(subtitle){
   dest2 = dest2.join('.');
   dest[dest.length - 1] = dest2;
   dest = dest.join("/");
-  dest2 = process.env.PWD + '/public/' + dest;
+  dest2 = process.env.PWD + '/.storage/Torrents/' + dest;
 
   fs.createReadStream(path)
     .pipe(srt2vtt)
@@ -66,7 +66,7 @@ var convertSrtToVtt = function(subtitle){
 };
 
 var convertAssToVtt = function(subtitle){
-  path = process.env.PWD + '/public/Torrents/';
+  path = process.env.PWD + '/.storage/Torrents/';
   path = path + subtitle.path;
   dest = subtitle.path.split('/');
   dest2 = dest[dest.length - 1];
@@ -75,7 +75,7 @@ var convertAssToVtt = function(subtitle){
   dest2 = dest2.join('.');
   dest[dest.length - 1] = dest2;
   dest = dest.join("/");
-  dest2 = process.env.PWD + '/public/Torrents/' + dest;
+  dest2 = process.env.PWD + '/.storage/Torrents/' + dest;
 
   ass_to_vtt(path, dest2, function(){});
 
@@ -91,8 +91,8 @@ var convertAssToVtt = function(subtitle){
 };
 
 Subtitles.after.insert(function(userId, doc){
-  var source = Torrents.findOne({_id: doc.torrentId});
-  var video = Videos.findOne({_id: doc.videoId});
+  var source = Torrents.findOne({_id: doc.Torrents});
+  var video = Videos.findOne({_id: doc.Videos});
   var subtitleFile = source.files[doc.fileId];
   var copy = false;
 
@@ -108,12 +108,12 @@ Subtitles.after.insert(function(userId, doc){
     return;
   }
 
-  var srcPath = process.env.PWD + '/public/Torrents/' + cleanPath(subtitleFile.path);
-  if (video.info.seriesId){
-    var serie = Series.findOne({_id: video.info.seriesId})
-    var dstPath = process.env.PWD + '/public/Series/' + cleanPath(serie.name) + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/subtitles/" + doc.language + ".vtt";
+  var srcPath = process.env.PWD + '/.storage/Torrents/' + cleanPath(subtitleFile.path);
+  if (video.info.Series){
+    var serie = Series.findOne({_id: video.info.Series})
+    var dstPath = process.env.PWD + '/.storage/Series/' + cleanPath(serie.info.name) + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/subtitles/" + doc.language + ".vtt";
   } else {
-    var dstPath = process.env.PWD + '/public/Movies/' + cleanPath(destination.info.name) + "/subtitles/" + doc.language + ".vtt";
+    var dstPath = process.env.PWD + '/.storage/Movies/' + cleanPath(destination.info.name) + "/subtitles/" + doc.language + ".vtt";
   }
   var future = new Future();
   var cmd;
@@ -133,12 +133,12 @@ Subtitles.after.insert(function(userId, doc){
 });
 
 Subtitles.after.remove(function(userId, doc){
-  video = Videos.findOne({_id: doc.videoId});
-  if (video.info.seriesId){
-    serie = Series.findOne({_id: video.info.seriesId});
-    path = process.env.PWD + '/public/Series/' + cleanPath(serie.name) + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/subtitles/" + doc.language + ".vtt";
+  video = Videos.findOne({_id: doc.Videos});
+  if (video.info.Series){
+    serie = Series.findOne({_id: video.info.Series});
+    path = process.env.PWD + '/.storage/Series/' + cleanPath(serie.info.name) + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/subtitles/" + doc.language + ".vtt";
   } else {
-    path = process.env.PWD + '/public/Movies/' + cleanName(video.info.name) + "/subtitles/" + doc.language + ".vtt";
+    path = process.env.PWD + '/.storage/Movies/' + cleanName(video.info.name) + "/subtitles/" + doc.language + ".vtt";
   }
   cmd = "rm -rf " + path;
   var future = new Future();

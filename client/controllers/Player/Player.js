@@ -7,25 +7,10 @@ Template.Player.onRendered(function(){
 
 Template.Player.helpers({
   videoSource: function(video){
-    var src = "";
-    if (video.info.seriesId){
-      serie = Series.findOne({_id: video.info.seriesId});
-      src = "/Series/" + serie.name + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/" + video.info.quality + ".mp4";
-    } else {
-      src = "/Movies" + video.info.name + "/" + video.info.quality + ".mp4";
-    }
-    return src;
+    return "/video/file/" + video._id + "/720p";
   },
   subtitleSource: function(subtitle){
-    var src = "";
-    var video = Videos.findOne({_id: subtitle.videoId});
-    if (video.info.seriesId){
-      serie = Series.findOne({_id: video.info.seriesId});
-      src = "/Series/" + serie.name + "/" + video.info.seasonNumber + "/" + video.info.epNumber + "/subtitles/" + subtitle.language + ".vtt";
-    } else {
-      src = "/Movies" + video.info.name + "/subtitles/" + subtitle.language + ".vtt";
-    }
-    return src;
+    return "/subtitles/file/" + subtitle._id;
   }
 });
 

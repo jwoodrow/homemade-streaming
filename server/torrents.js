@@ -3,7 +3,7 @@ var exec = Npm.require("child_process").exec;
 var fs = Npm.require('fs');
 
 var createTorrent = function(source, torrentId){
-  cmd = "transmission-remote -n 'transmission:transmission' -a " + source;
+  cmd = "transmission-remote -n 'transmission:transmission' --add " + source;
   var futureAdd = new Future();
   exec(cmd, function(error, stdout, stderr){
     if (error){
@@ -39,7 +39,7 @@ var createTorrent = function(source, torrentId){
       exec(cmd, function(error, stdout, stderr){
         if (error){
           console.log(error);
-    throw (new Meteor.Error(500, 'Failed to get torrent info.', error));
+          throw (new Meteor.Error(500, 'Failed to get torrent info.', error));
         } else {
           res = stdout.toString().split("\n");
         }
@@ -93,8 +93,34 @@ var removeTorrent = function(torrent){
 
 var moveToPublic = function(torrent){
   var hash = torrent.hash;
-  var basepath = torrent.location;
   var files;
+
+  var cmd = "transmission-remote -n 'transmission:transmission' -t " + hash + " --move " + process.env.PWD + "/.uploads/";
+  var future = new Future();
+  exec(cmd, function(error, stdout, stderr){
+    if (error){
+      console.log(error);
+      throw (new Meteor.Error(500, 'Failed to save file.', error));
+    }
+    future.return();
+  });
+  future.wait();
+
+  var future = new Future();
+  cmd = "transmission-remote -n 'transmission:transmission' -t" + hash + " -i | awk -F':' '{print $2}'";
+  var res;
+  exec(cmd, function(error, stdout, stderr){
+    if (error){
+      console.log(error);
+    } else {
+      res = stdout.toString().split("\n");
+    }
+    future.return();
+  });
+  future.wait();
+  var basepath = res[8].trim();
+  Torrents.update({_id: torrent._id}, {$set:{location: basepath}});
+
   var cmd = "transmission-remote -n 'transmission:transmission' -t " + hash + " -f | awk 'NR > 2 {print substr($0,index($0,$7))}'";
   var futureFiles = new Future();
   exec(cmd, function(error, stdout, stderr){
@@ -123,7 +149,7 @@ var moveToPublic = function(torrent){
     if(file != ""){
       originalpath = cleanPath(basepath + "/" + file);
       missingDirs = file.split('/');
-      path = process.env.PWD + '/public/Torrents';
+      path = process.env.PWD + '/.storage/Torrents';
       destpath = cleanPath(path + "/" + file);
       tmpPath = path;
       if (missingDirs.length > 1){
@@ -143,7 +169,7 @@ var moveToPublic = function(torrent){
           }
         });
       }
-      cmd = "cp -R " + originalpath + " " + destpath;
+      cmd = "mv " + originalpath + " " + destpath;
       var futureCopy = new Future();
       exec(cmd, function(error, stdout, stderr){
         if (error){

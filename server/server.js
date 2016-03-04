@@ -3,18 +3,20 @@ var exec = Npm.require("child_process").exec;
 var fs = Npm.require('fs');
 
 Meteor.startup(function () {
+  cmd = "killall transmission-daemon && transmission";
+  exec(cmd, function(){
+
+  });
   UploadServer.init({
     tmpDir: process.env.PWD + '/.uploads/tmp',
     uploadDir: process.env.PWD + '/.uploads/',
     checkCreateDirectories: true, //create the directories for you
     finished: function(fileInfo, formFields) {
-      console.log(fileInfo);
-      console.log(formFields);
       var cleanPath = function(str){
         return str.replace(/ /g, "\\ ").replace(/\]/g, "\\]").replace(/\[/g, "\\[").replace(/\(/g, "\\(").replace(/\)/g, "\\)").replace(/\'/g, "\\'");
       };
       path = process.env.PWD + '/.uploads' + cleanPath(fileInfo.path);
-      dest = process.env.PWD + "/public/Torrents/Uploads/" + cleanPath(fileInfo.name);
+      dest = process.env.PWD + "/.storage/Torrents/Uploads/" + cleanPath(fileInfo.name);
       var torrent;
       if (torrent = Torrents.findOne({name: "Uploads"})){
         files = torrent.files;
@@ -30,7 +32,7 @@ Meteor.startup(function () {
       } else {
         files = [{
           name: fileInfo.name,
-          path: dest
+          path: "Uploads/" + cleanPath(fileInfo.name)
         }];
         id = Torrents.insert({
           name: "Uploads",
@@ -45,7 +47,7 @@ Meteor.startup(function () {
           }
         });
       }
-      cmd = "mkdir -p " + process.env.PWD + "/public/Torrents/Uploads && mv " + path + " " + dest;
+      cmd = "mkdir -p " + process.env.PWD + "/.storage/Torrents/Uploads && mv " + path + " " + dest;
       var future = new Future();
       exec(cmd, function(error, stdout, stderr){
         if (error){

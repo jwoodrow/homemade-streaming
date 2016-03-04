@@ -10,11 +10,11 @@ Meteor.methods({
 });
 
 Series.before.remove(function(userId, doc){
-  videos = Videos.find({"info.seriesId": doc._id}).fetch();
+  videos = Videos.find({"info.Series": doc._id}).fetch();
   _.forEach(videos, function(video, index, videos){
     Videos.remove({_id: video._id});
   });
-  path = process.env.PWD + '/public/Series/' + cleanPath(doc.name);
+  path = process.env.PWD + '/.storage/Series/' + cleanPath(doc.info.name);
   cmd = "rm -rf " + path;
   var future = new Future();
   exec(cmd, function(error, result){

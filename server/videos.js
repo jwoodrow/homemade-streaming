@@ -6,12 +6,12 @@ var cleanPath = function(str){
 };
 
 Videos.after.insert(function(userId, doc){
-  var source = Torrents.findOne({_id: doc.info.torrentId});
+  var source = Torrents.findOne({_id: doc.info.Torrents});
   var videoFile = source.files[doc.info.fileId];
-  if (doc.info.seriesId){
-    var series = Series.findOne({_id: doc.info.seriesId});
+  if (doc.info.Series){
+    var series = Series.findOne({_id: doc.info.Series});
 
-    var path = process.env.PWD + '/public/Series/' + cleanPath(series.name) + "/" + doc.info.seasonNumber + "/" + doc.info.epNumber + "/";
+    var path = process.env.PWD + '/.storage/Series/' + cleanPath(series.info.name) + "/" + doc.info.seasonNumber + "/" + doc.info.epNumber + "/";
     var future = new Future();
     cmd = "mkdir -p " + path + "{subtitles,audio}";
     exec(cmd, function(error, stdout, stderr){
@@ -24,8 +24,8 @@ Videos.after.insert(function(userId, doc){
     future.wait();
 
     var futureMove = new Future();
-    var extension = videoFile.name.split(".")[1];
-    cmd = "cp " + process.env.PWD + '/public/Torrents/' + cleanPath(videoFile.path) + " " + path + "/" + doc.info.quality + "." + extension;
+    var extension = videoFile.name.split(".")[videoFile.name.split(".").length - 1];
+    cmd = "cp " + process.env.PWD + '/.storage/Torrents/' + cleanPath(videoFile.path) + " " + path + "/" + doc.info.quality + "." + extension;
     exec(cmd, function(error, stdout, stderr){
       if (error){
         console.log(error);
@@ -35,7 +35,7 @@ Videos.after.insert(function(userId, doc){
     });
     futureMove.wait();
   } else {
-    var path = process.env.PWD + '/public/Movies/' + cleanName(doc.info.name) + "/";
+    var path = process.env.PWD + '/.storage/Movies/' + cleanPath(doc.info.name) + "/";
     var future = new Future();
     cmd = "mkdir -p " + path + "{subtitles,audio}";
     exec(cmd, function(error, stdout, stderr){
@@ -48,8 +48,8 @@ Videos.after.insert(function(userId, doc){
     future.wait();
 
     var futureMove = new Future();
-    var extension = videoFile.name.split(".")[1];
-    cmd = "cp " + process.env.PWD + '/public/Torrents/' + cleanPath(videoFile.path) + " " + path + "/" + quality + "." + extension;
+    var extension = videoFile.name.split(".")[videoFile.name.split(".").length - 1];
+    cmd = "cp " + process.env.PWD + '/.storage/Torrents/' + cleanPath(videoFile.path) + " " + path + "/" + quality + "." + extension;
     exec(cmd, function(error, stdout, stderr){
       if (error){
         console.log(error);
@@ -62,19 +62,19 @@ Videos.after.insert(function(userId, doc){
 });
 
 Videos.before.remove(function(userId, doc){
-  audios = Audios.find({videoId: doc._id}).fetch();
-  subtitles = Subtitles.find({videoId: doc._id}).fetch();
+  audios = Audios.find({Videos: doc._id}).fetch();
+  subtitles = Subtitles.find({Videos: doc._id}).fetch();
   _.forEach(audios, function(audio, index){
     Audios.remove({_id: audio._id});
   });
   _.forEach(subtitles, function(subtitle, index){
     Subtitles.remove({_id: subtitle._id});
   });
-  if (doc.info.seriesId){
-    serie = Series.findOne({_id: doc.info.seriesId});
-    path = process.env.PWD + '/public/Series/' + cleanPath(serie.name) + "/" + doc.info.seasonNumber + "/" + doc.info.epNumber;
+  if (doc.info.Series){
+    serie = Series.findOne({_id: doc.info.Series});
+    path = process.env.PWD + '/.storage/Series/' + cleanPath(serie.info.name) + "/" + doc.info.seasonNumber + "/" + doc.info.epNumber;
   } else {
-    path = process.env.PWD + '/public/Movies/' + cleanName(doc.info.name);
+    path = process.env.PWD + '/.storage/Movies/' + cleanName(doc.info.name);
   }
   cmd = "rm -rf " + path;
   var future = new Future();
